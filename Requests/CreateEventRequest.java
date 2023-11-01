@@ -1,3 +1,5 @@
+package Requests;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +21,8 @@ public class CreateEventRequest {
     public double balance;
 
     /**
-     * Constructor that tells the Jackson parser how to serialize and deserialize the object and json
+     * Constructor that tells the Jackson parser how to serialize and deserialize
+     * the object and json
      */
     @JsonCreator
     public CreateEventRequest(@JsonProperty("title") String title,

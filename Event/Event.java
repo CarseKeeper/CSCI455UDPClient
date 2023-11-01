@@ -1,3 +1,5 @@
+package Event;
+
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -15,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-@JsonPropertyOrder({ "id", "title", "description", "target", "deadline"})
+@JsonPropertyOrder({ "id", "title", "description", "target", "deadline" })
 public class Event {
     private final int id;
     private String title;
@@ -25,8 +27,10 @@ public class Event {
     private double balance;
 
     /**
-     * Constructor that tells the Jackson parser how to serialize and deserialize the object and json,
-     * has validation so if wierd data gets into the constructor, it gets normalized.
+     * Constructor that tells the Jackson parser how to serialize and deserialize
+     * the object and json,
+     * has validation so if wierd data gets into the constructor, it gets
+     * normalized.
      */
     @JsonCreator
     public Event(@JsonProperty("id") int id,
@@ -87,8 +91,6 @@ public class Event {
     public Date getDeadline() {
         return this.deadline;
     }
-
-
 
     // Setters
     public void setTitle(String event) {

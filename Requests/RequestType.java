@@ -1,3 +1,4 @@
+package Requests;
 //ENUMS for Requests
 
 public enum RequestType {

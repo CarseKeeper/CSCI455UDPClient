@@ -1,3 +1,4 @@
+package Responses;
 
 import java.util.ArrayList;
 
@@ -5,12 +6,17 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Event.Event;
+import JSON.WriteJsonObject;
+import Requests.RequestType;
+
 public class Response {
     public RequestType responseType;
     public String responseBody;
 
     /**
-     * Constructor that tells the Jackson parser how to serialize and deserialize the object and json
+     * Constructor that tells the Jackson parser how to serialize and deserialize
+     * the object and json
      */
     @JsonCreator
     public Response(@JsonProperty("RequestType") RequestType type, @JsonProperty("ResponseBody") String responseBody) {

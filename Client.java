@@ -1,44 +1,38 @@
-import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.ser.Serializers;
 
+import Requests.*;
+import Event.Event;
+import JSON.WriteJsonObject;
+import Responses.Response;
+
 public class Client {
 
     public static void main(String[] args) {
         try {
-
             WriteJsonObject json = new WriteJsonObject(); // Serializer and Deserializer object
             Scanner scan = new Scanner(System.in); // Scanner for client input
             ArrayList<Event> EVENTS = new ArrayList<Event>(); // List of all Events from the database
-            DatagramSocket server;
-            DatagramSocket client;
-            InetAddress Ip;
-            byte buf[];
-            int port;
+            DatagramSocket server; // Send and recieves packets
+            InetAddress Ip; // the server's Ip should stay the same when running
+            byte buf[]; // Storage for the json string
+            int port; // Port number should also stay the same
 
-            // While loop for getting a connection to the server
+            // GETS THE PLACE TO SEND THE DATA TO
             while (true) {
                 try {
                     server = connectToServer(); // Method prompts for host ip and port
-                    client = connectToServer();
                     Ip = InetAddress.getByName(getHost());
                     buf = null;
                     port = getPort();
@@ -49,7 +43,7 @@ public class Client {
                 }
             }
 
-            // MAIN Logic Loop
+            // MAIN LOGIC LOOP
             while (true) {
                 // User is prompted for an action
                 System.out.printf(
@@ -60,7 +54,7 @@ public class Client {
 
                 // LIST CURRENT EVENTS
                 if (answer.startsWith("1")) {
-                    EVENTS = getEvents(server, buf, Ip, port);
+                    EVENTS = getEvents(server, buf, Ip, port, json);
                     EVENTS = currentEvents(EVENTS);
                     listEvents(EVENTS);
                     System.out.println();
@@ -68,22 +62,22 @@ public class Client {
                 // CREATE A NEW EVENT
                 else if (answer.startsWith("2")) {
                     CreateEventRequest newEvent = formEvent();
-                    // createEvent(newEvent, out, in, json);
+                    createEvent(newEvent, server, buf, Ip, port, json);
                 }
                 // DONATE AN AMOUNT TO AN EVENT
                 else if (answer.startsWith("3")) {
-                    // EVENTS = getEvents(in, out);
-                    // donateToEvent(EVENTS, in, out, json);
+                    EVENTS = getEvents(server, buf, Ip, port, json);
+                    donateToEvent(EVENTS, server, buf, Ip, port, json);
                 }
                 // UPDATES AN EVENT FROM ALL EVENTS
                 else if (answer.startsWith("4")) {
-                    // EVENTS = getEvents(in, out);
+                    EVENTS = getEvents(server, buf, Ip, port, json);
                     listEvents(EVENTS);
-                    // updateEvent(EVENTS, in, out, json);
+                    updateEvent(EVENTS, server, buf, Ip, port, json);
                 }
                 // PRINTS OUT CURRENT EVENTS AND PAST EVENTS
                 else if (answer.startsWith("5")) {
-                    // EVENTS = getEvents(in, out);
+                    EVENTS = getEvents(server, buf, Ip, port, json);
                     listAllEvents(EVENTS);
                     System.out.println();
                 }
@@ -131,13 +125,24 @@ public class Client {
     /**
      * Sends information to create a new event
      */
-    private static void createEvent(CreateEventRequest newEvent, DataOutputStream out,
-            BufferedReader in,
+    private static void createEvent(CreateEventRequest newEvent, DatagramSocket server,
+            byte buf[], InetAddress Ip, int port,
             WriteJsonObject json) {
         try {
+            // Send to server
             String body = json.serialize(newEvent);
-            out.writeBytes(json.serialize(new Request(RequestType.CREATE, body)) + "\n");
-            in.readLine();
+            buf = (json.serialize(new Request(RequestType.CREATE, body))).getBytes();
+            DatagramPacket DpSend = new DatagramPacket(buf, buf.length, Ip, port);
+            server.send(DpSend);
+
+            // Recieve from server
+            byte[] recieve = new byte[65535];
+            DatagramPacket DpRecieve = new DatagramPacket(recieve, recieve.length);
+            server.receive(DpRecieve);
+
+            // Deserialize packet data
+            Response response = json.deserialize(data(recieve).toString(), Response.class);
+
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -188,7 +193,7 @@ public class Client {
      */
     private static DatagramSocket connectToServer() {
         try {
-            return new DatagramSocket(6789);
+            return new DatagramSocket();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -228,28 +233,27 @@ public class Client {
     /**
      * gets all events from server and returns them as an ArrayList
      */
-    private static ArrayList<Event> getEvents(DatagramSocket ds, byte buf[], InetAddress Ip, int port) {
+    private static ArrayList<Event> getEvents(DatagramSocket server, byte buf[], InetAddress Ip, int port,
+            WriteJsonObject json) {
         ArrayList<Event> events = new ArrayList<Event>();
-        WriteJsonObject json = new WriteJsonObject();
         try {
-            buf = (json.serialize(new Request(RequestType.EVENTS, json.serialize(new EventsRequest()))) + "\n")
+            // Send to server
+            buf = (json.serialize(new Request(RequestType.EVENTS, json.serialize(new EventsRequest()))))
                     .getBytes();
             DatagramPacket DpSend = new DatagramPacket(buf, buf.length, Ip, port);
-            ds.send(DpSend);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try {
+            server.send(DpSend);
+
+            // Recive from server
             byte[] recieve = new byte[65535];
             DatagramPacket DpRecieve = new DatagramPacket(recieve, recieve.length);
-            ds.receive(DpRecieve);
-            System.out.println(DpRecieve.toString());
-            // Response response = json.deserialize(data(recieve).toString(),
-            // Response.class);
-            // if (response.responseType == RequestType.EVENTS)
-            // events = json.deserialize(response.responseBody, new
-            // TypeReference<ArrayList<Event>>() {
-            // });
+            server.receive(DpRecieve); // Waits for packet from server
+
+            // Deserialize packet data
+            Response response = json.deserialize(data(recieve).toString(),
+                    Response.class);
+            if (response.responseType == RequestType.EVENTS)
+                events = json.deserialize(response.responseBody, new TypeReference<ArrayList<Event>>() {
+                });
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -275,8 +279,8 @@ public class Client {
     /**
      * lists all the current events and prompts user to choose one
      */
-    private static void updateEvent(ArrayList<Event> EVENTS, BufferedReader in, DataOutputStream out,
-            WriteJsonObject json) {
+    private static void updateEvent(ArrayList<Event> EVENTS, DatagramSocket server, byte buf[], InetAddress Ip,
+            int port, WriteJsonObject json) {
         Scanner scan = new Scanner(System.in);
         try {
             System.out.println("choose an event or -1 to go back: ");
@@ -284,8 +288,20 @@ public class Client {
             if (index < EVENTS.size() && index >= 0) {
                 Event newEvent = EVENTS.get(index);
                 String update = changeEvent(newEvent, json);
-                out.writeBytes(json.serialize(new Request(RequestType.UPDATE, update)) + "\n");
-                in.readLine();
+
+                // Send to server
+                buf = (json.serialize(new Request(RequestType.UPDATE, update))).getBytes();
+                DatagramPacket DpSend = new DatagramPacket(buf, buf.length, Ip, port);
+                server.send(DpSend);
+
+                // Recive from server
+                byte[] recieve = new byte[65535];
+                DatagramPacket DpRecieve = new DatagramPacket(recieve, recieve.length);
+                server.receive(DpRecieve);
+
+                // Deserialize packet data
+                Response response = json.deserialize(data(recieve).toString(),
+                        Response.class);
             } else if (index == -2) {
 
             } else {
@@ -299,8 +315,8 @@ public class Client {
     /**
      * Prompts the user to pick an event and donates money to it
      */
-    private static void donateToEvent(ArrayList<Event> EVENTS, BufferedReader in, DataOutputStream out,
-            WriteJsonObject json) {
+    private static void donateToEvent(ArrayList<Event> EVENTS, DatagramSocket server, byte buf[], InetAddress Ip,
+            int port, WriteJsonObject json) {
         Scanner scan = new Scanner(System.in);
         try {
             ArrayList<Event> curEvents = currentEvents(EVENTS);
@@ -327,17 +343,24 @@ public class Client {
                         amount = scanTemp.nextDouble();
                 }
                 String donate = json.serialize(new DonateRequest(curEvents.get(index).getId(), amount));
-                out.writeBytes(json.serialize(new Request(RequestType.DONATE, donate)) + "\n");
+
+                // Send to server
+                buf = (json.serialize(new Request(RequestType.DONATE, donate))).getBytes();
+                DatagramPacket DpSend = new DatagramPacket(buf, buf.length, Ip, port);
+                server.send(DpSend);
             } else if (index == -1) {
                 return;
             } else {
                 System.out.println("That index is not available.");
             }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            Response response = json.deserialize(in.readLine(), Response.class);
+
+            // Recieve from server
+            byte[] recieve = new byte[65535];
+            DatagramPacket DpRecieve = new DatagramPacket(recieve, recieve.length);
+            server.receive(DpRecieve);
+
+            // Deserialize packet data
+            Response response = json.deserialize(data(recieve).toString(), Response.class);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

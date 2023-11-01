@@ -1,3 +1,5 @@
+package Requests;
+
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -9,7 +11,8 @@ public class UpdateEventRequest {
     String event;
 
     /**
-     * Constructor that tells the Jackson parser how to serialize and deserialize the object and json
+     * Constructor that tells the Jackson parser how to serialize and deserialize
+     * the object and json
      */
     @JsonCreator
     UpdateEventRequest(@JsonProperty("Event") String event) {
