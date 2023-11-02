@@ -258,6 +258,8 @@ public class Client {
             System.err.println(e.getMessage());
         }
 
+        events = sortDeadline(events);
+
         return events;
     }
 
@@ -506,4 +508,32 @@ public class Client {
         DecimalFormat currency = new DecimalFormat("$###,##0.00");
         return currency.format(value);
     }
+
+    /**
+     * Sorts ArrayList based on deadline
+     */
+    private static ArrayList<Event> sortDeadline(ArrayList<Event> array) {
+        int soonest, times;
+        times = array.size();
+        ArrayList<Event> temp = new ArrayList<Event>();
+        if (array.isEmpty())
+            return temp;
+
+        for (int i = 0; i < times; i++) {
+            if (array.size() <= 1) {
+                temp.add(array.get(0));
+            } else {
+                soonest = 0;
+                for (int j = 1; j < array.size(); j++) {
+                    if (array.get(j).getDeadline().compareTo(array.get(soonest).getDeadline()) <= 0) {
+                        soonest = j;
+                    }
+                }
+                temp.add(array.remove(soonest));
+            }
+        }
+
+        return temp;
+    }
+
 }
