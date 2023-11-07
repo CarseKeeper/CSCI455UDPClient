@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.14.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json4s-ast_2.12-3.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json4s-scalap_2.12-3.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json4s-jackson_2.12-3.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json4s-core_2.12-3.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/paranamer-2.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/sqlite-jdbc-3.43.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.9.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.15.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.13.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/scala-library-2.12.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.15.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.15.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.9.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

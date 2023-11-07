@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CSCI455UDPClient">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/CSCI455UDPClient_jar/CSCI455UDPClient.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

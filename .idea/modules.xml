@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CSCI455UDPClient.iml" filepath="$PROJECT_DIR$/.idea/CSCI455UDPClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CSCI455UDPClient.iml" filepath="$PROJECT_DIR$/CSCI455UDPClient.iml" />
     </modules>
   </component>
 </project>
