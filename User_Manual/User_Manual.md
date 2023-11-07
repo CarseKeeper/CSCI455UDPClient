@@ -1,5 +1,6 @@
 # <ins>User Manual</ins>
-## *Server-side Program*
+
+## _Server-side Program_
 
 ### Press Play
 
@@ -24,7 +25,7 @@ The database used for the server of this project is SQLlite which when opened up
 <div align="center"><p><img src=Pictures/Server.png alt="SQLlite Database" width=90% style="border: white solid 1px"></p>
 The SQLlite Database</div>
 
-## *Client-side Program*
+## _Client-side Program_
 
 ### How to run the Client side:
 
@@ -52,20 +53,19 @@ Client Prompts</div>
 <div align="center"><p><img src="Pictures/CurrentEvents.jpg" alt="Picture of the List current events action result" width="650" style="border: white solid 1px"></p>
 List of current Events</div>
 
-2. **Create a new Event**
+2.  **Create a new Event**
 
-   a. Enter 2 at the Options prompt
+    a. Enter 2 at the Options prompt
 
-   b. Enter the Title for your event
+    b. Enter the Title for your event
 
-   c. Enter the Description for your event
+    c. Enter the Description for your event
 
-   d. Enter the Target amount for your event in the form ####.00
+    d. Enter the Target amount for your event in the form ####.00
 
-   e. Enter the Deadline of your event in the form YYYY-MM-DDTHH:MM:SSSZ
+    e. Enter the Deadline of your event in the form YYYY-MM-DDTHH:MM:SSSZ
 
-         e.g. Oct 25, 2023 at 1:45:30PM would be 2023-10-25T13:45:300Z
-
+          e.g. Oct 25, 2023 at 1:45:30PM would be 2023-10-25T13:45:300Z
 
 3.  **Donate to a current event**
 
@@ -77,7 +77,6 @@ List of current Events</div>
 
 <div align="center"><p><img src="Pictures/DonateEvent.png" alt="Picture of the list of current events with the selected event highlighted" width="650" style="border: white solid 1px"></p>
 Selecting an Event to Donate to</div>
-
 
 4.  **Update an event**
 
@@ -110,4 +109,13 @@ Listing of All Events in a Table format</div>
     a. Enter q at the Options prompt
 
     b. The program will end
+
+<div align="center"><p><img src="Pictures/AllEventsUDP.jpg" alt="Picture of multiple clients using the AllEvents prompt" width="650" style="border: white solid 1px; margin-top: 50px"></p>
+All events on multiple clients</div>
+
+<div align="center"><p><img src="Pictures/CurrentEventsUDP.jpg" alt="Picture of multiple clients using the CurrentEvents prompt" width="650" style="border: white solid 1px; margin-top: 50px"></p>Current events on multiple clients</div>
+
+<div align="center"><p><img src="Pictures/EventUpdatedUDP.jpg" alt="Picture of one client using UpdateEvent and the other observing the change" width="650" style="border: white solid 1px; margin-top: 50px"></p>One client updating an Event and the other observing the change</div>
+
+
 <div align="center"><p><img src="Pictures/ServerIcon.png" alt="Picture of a server icon" width="150" style="margin-right: 15%; opacity: 30%"><img src="Pictures/ClientIcon.png" alt="" width="150" style="opacity: 30%; margin-bottom: 20px"></p></div>
